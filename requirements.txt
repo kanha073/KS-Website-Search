@@ -1,0 +1,22 @@
+aiofiles
+Pillow
+humanize
+hachoir
+pyrofork==2.3.45
+TgCrypto
+dnspython
+aiohttp
+telethon
+psutil
+motor
+telethon
+pymongo[srv]==3.12.3
+fuzzywuzzy
+cinemagoer==2023.5.1
+rapidfuzz
+Flask==1.1.2
+gunicorn==20.1.0
+# ====================== 💘❤👩‍💻====================================
+#    ==> P O W E R E D - B Y - 🤞 L A Z Y D E V E L O P E  R        |
+# ==================================================================
+
