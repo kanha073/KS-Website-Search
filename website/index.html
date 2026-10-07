@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KS Movies - Movie Search</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#02070e;--card:#0b1622;--ink:#f5f7fa;--mute:#9aa8b7;--accent:#ff1450;--line:#20303e}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:20px}
+body{min-height:100vh;background:radial-gradient(circle at 50% -10%,rgba(255,20,80,.16),transparent 34%),linear-gradient(180deg,#02070e,#030a12 48%,#02070e);color:var(--ink);font:400 16px/1.5 "DM Sans",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px 45px}
+h1,h2,.logo{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+header{padding:34px 0 10px;text-align:center}
+.logo{font-weight:900;font-size:clamp(42px,11vw,78px);letter-spacing:-.045em;line-height:1;text-shadow:0 5px 22px rgba(0,0,0,.7)}
+.logo span{display:inline-block;background:linear-gradient(135deg,#fff 0%,#fff 43%,var(--accent) 44%,#ff3d6e 100%);color:transparent;-webkit-background-clip:text;background-clip:text;padding:0 .04em;transform:rotate(-3deg);filter:drop-shadow(0 0 13px rgba(255,20,80,.3))}
+.tag{color:#c1ccd7;margin-top:12px;font-size:14px}
+.search{margin:26px auto 42px;max-width:680px;height:66px;display:flex;align-items:center;border:2px solid rgba(255,20,80,.75);border-radius:999px;background:rgba(11,22,34,.94);overflow:hidden;box-shadow:0 0 22px rgba(255,20,80,.18),inset 0 1px 0 rgba(255,255,255,.06)}
+.search input{flex:1;min-width:0;height:100%;border:0;background:none;color:var(--ink);font:500 16px "DM Sans",sans-serif;padding:0 20px;outline:none}
+.search input::placeholder{color:#8997a6}
+.search button{height:54px;margin-right:6px;border:0;background:var(--accent);color:#fff;font:700 16px "DM Sans",sans-serif;padding:0 27px;border-radius:999px;cursor:pointer;box-shadow:0 0 18px rgba(255,20,80,.28)}
+.search button:active{transform:scale(.98)}
+.search:focus-within{box-shadow:0 0 0 4px rgba(255,20,80,.12),0 0 28px rgba(255,20,80,.2)}
+section{margin-bottom:38px;background:linear-gradient(145deg,rgba(11,22,34,.94),rgba(5,13,21,.92));border:1px solid rgba(43,61,76,.75);border-radius:20px;padding:22px 18px 20px;box-shadow:0 12px 35px rgba(0,0,0,.2)}
+h2{font-size:26px;font-weight:900;letter-spacing:-.025em;margin-bottom:17px}
+h2:before{content:"";display:inline-block;width:5px;height:27px;margin-right:10px;vertical-align:-4px;border-radius:5px;background:var(--accent);box-shadow:0 0 10px rgba(255,20,80,.7)}
+.row{display:flex;gap:14px;overflow-x:auto;padding:2px 1px 10px;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}
+.row::-webkit-scrollbar{height:4px}.row::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+.poster{flex:0 0 155px;scroll-snap-align:start}
+.art{aspect-ratio:2/3;border-radius:12px;padding:12px;display:flex;align-items:flex-end;font:900 19px/1.08 "Bricolage Grotesque",sans-serif;color:#fff;text-shadow:0 2px 9px rgba(0,0,0,.8);box-shadow:0 8px 20px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}
+.poster p{margin-top:9px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.poster small{color:var(--mute);font-size:11px}
+.top{list-style:none;padding:0;border-top:1px solid var(--line)}
+.top li{display:flex;align-items:center;gap:15px;padding:15px 4px;border-bottom:1px solid var(--line)}
+.rank{font:900 31px "Bricolage Grotesque",sans-serif;color:var(--accent);width:42px;text-shadow:0 0 12px rgba(255,20,80,.35)}
+.top b{display:block;font-weight:700}.top small{color:var(--mute);font-size:12px}
+.count{margin-left:auto;color:#9aa8b7;font-size:13px;white-space:nowrap}
+.empty{color:var(--mute);display:none}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media(max-width:600px){
+.wrap{padding:0 10px 35px}header{padding-top:27px}.logo{font-size:46px}.tag{font-size:13px}
+.search{height:62px;margin:22px auto 30px}.search input{padding-left:16px;font-size:14px}.search button{height:50px;padding:0 19px;font-size:14px}
+section{padding:18px 13px 17px;border-radius:17px;margin-bottom:25px}h2{font-size:22px}h2:before{height:23px;width:4px}
+.poster{flex-basis:137px}.art{font-size:16px}.top li{gap:11px;padding:13px 2px}.rank{width:34px;font-size:27px}.count{font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo"><span>KS</span> Movies</div>
+    <p class="tag">Apni pasand ki movie dhundo</p>
+  </header>
+
+  <form class="search" role="search" onsubmit="return false">
+    <input id="q" type="search" placeholder="Movie ka naam likho..." aria-label="Movie search">
+    <button type="button" onclick="filter()">Search</button>
+  </form>
+
+  <section>
+    <h2>New Movies</h2>
+    <div class="row" id="new"></div>
+    <p class="empty" id="e1">Is naam ki koi new movie nahi mili.</p>
+  </section>
+
+  <section>
+    <h2>Most Searched</h2>
+    <ol class="top" id="top"></ol>
+    <p class="empty" id="e2">Is naam ki koi movie nahi mili.</p>
+  </section>
+</div>
+
+<script>
+var NEW=[
+ ["Raat Ka Raasta","Thriller","2026","#7b2d8e,#e0457b"],
+ ["Monsoon Express","Romance","2026","#0f6b7a,#4cc2a5"],
+ ["Last Reel","Drama","2026","#b5451b,#f2a33a"],
+ ["Gully Gang","Comedy","2026","#2f4fb3,#7fb2ff"],
+ ["Silent Orbit","Sci-Fi","2026","#33295c,#8b6cff"],
+ ["Dhoop Chhaon","Family","2026","#9a6b10,#f5d36b"]
+];
+var TOP=[
+ ["Tez Raftaar","Action","12.4L"],
+ ["Dil Ka Safar","Romance","9.8L"],
+ ["Shahar Ki Raat","Crime","8.1L"],
+ ["Hasi Express","Comedy","6.7L"],
+ ["Veer Ki Kahani","Drama","5.2L"]
+];
+function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function render(q){
+  q=(q||"").trim().toLowerCase();
+  var n=NEW.filter(function(m){return m[0].toLowerCase().indexOf(q)>-1});
+  var t=TOP.filter(function(m){return m[0].toLowerCase().indexOf(q)>-1});
+  document.getElementById("new").innerHTML=n.map(function(m){
+    var c=m[3].split(",");
+    return '<div class="poster"><div class="art" style="background:linear-gradient(160deg,'+c[0]+','+c[1]+')">'+esc(m[0])+'</div><p>'+esc(m[0])+'</p><small>'+m[1]+' &middot; '+m[2]+'</small></div>';
+  }).join("");
+  document.getElementById("top").innerHTML=t.map(function(m){
+    var r=TOP.indexOf(m)+1;
+    return '<li><span class="rank">'+r+'</span><div><b>'+esc(m[0])+'</b><small>'+m[1]+'</small></div><span class="count">'+m[2]+' searches</span></li>';
+  }).join("");
+  document.getElementById("e1").style.display=n.length?"none":"block";
+  document.getElementById("e2").style.display=t.length?"none":"block";
+}
+function filter(){render(document.getElementById("q").value)}
+document.getElementById("q").addEventListener("input",filter);
+render("");
+</script>
+</body>
+</html>
